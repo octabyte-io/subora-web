@@ -43,7 +43,7 @@ const CUSTOMER_ACTIONS = [
     title: "What’s in the box",
     items: [
       "Change the quantity.",
-      "Change the option, such as a 3 kg bag instead of 6 kg.",
+      "Change the option, such as a 3\u00a0kg bag instead of 6\u00a0kg.",
       "Swap to another product from your Swap list.",
     ],
   },
@@ -101,7 +101,7 @@ const SETTINGS: Setting[] = [
   {
     name: "Change how often",
     detail:
-      "Customers can pick another frequency of the plan they bought. They then pay the plan’s price of today.",
+      "Customers can pick another frequency of the plan they bought. They then pay the plan’s current price.",
     value: "On by default",
   },
   {
@@ -202,7 +202,7 @@ export default function CustomerPortalPage() {
           id="switches-title"
           title="Turn off what you don’t offer."
           continuation="It leaves the portal at once."
-          intro="Every action starts on. Switch one off and customers no longer see it, and Subora refuses it if asked. Try it: the page on the right is what Sam sees."
+          intro="Every action starts on. Switch one off and customers no longer see it, and Subora refuses it if asked. Try it: the portal page next to the switches is what Sam sees."
         />
         <PortalSwitchesDemo className="mt-14" />
         <ul className="mt-12 grid grid-cols-1 gap-x-8 gap-y-4 border-t border-line pt-8 text-muted md:grid-cols-3">
@@ -290,9 +290,9 @@ export default function CustomerPortalPage() {
               continuation="In your store’s name."
               intro="Whoever makes a change, the customer gets the same email saying what changed, with your logo and brand color and a button back to the portal."
             />
-            <ul className="mt-8 grid grid-cols-1 gap-x-6 border-t border-line sm:grid-cols-2">
+            <ul className="mt-8 grid grid-cols-1 border-t border-line sm:grid-cols-2">
               {EMAILS.map((email, i) => (
-                <li key={email} className={cn("border-b border-line py-2.5", i % 2 === 1 && "sm:pl-6 sm:border-l")}>
+                <li key={email} className={cn("border-b border-line py-2.5", i % 2 === 0 ? "sm:pr-6" : "sm:border-l sm:pl-6")}>
                   {email}
                 </li>
               ))}

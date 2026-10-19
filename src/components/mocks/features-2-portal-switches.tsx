@@ -87,8 +87,8 @@ export function PortalSwitchesDemo({ className }: { className?: string }) {
             </li>
           ))}
         </ul>
-        <p aria-live="polite" className="mt-4 min-h-[1.55em] text-small font-medium">
-          {said}
+        <p aria-live="polite" className={cn("mt-4 min-h-[1.55em] text-small", said ? "font-medium" : "text-muted")}>
+          {said || "Turn a switch off to see its button leave Sam’s page."}
         </p>
       </div>
 

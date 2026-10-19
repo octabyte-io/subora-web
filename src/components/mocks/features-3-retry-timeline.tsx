@@ -160,7 +160,7 @@ export function RetryTimeline({ className }: { className?: string }) {
             <li
               key={p.title}
               className={cn(
-                "relative xl:absolute xl:flex xl:w-36 xl:[left:var(--x)]",
+                "relative xl:absolute xl:flex xl:w-40 xl:[left:var(--x)]",
                 p.day === 0
                   ? "xl:-translate-x-3.5 xl:items-start xl:text-left"
                   : "xl:-translate-x-1/2 xl:items-center xl:text-center",
@@ -177,10 +177,12 @@ export function RetryTimeline({ className }: { className?: string }) {
                 <Marker point={p} />
               </span>
               <span className={cn("block", p.side === "above" ? "xl:mb-3" : "xl:mt-3")}>
+                {/* Below xl the day trails the title; on the axis it gets its own line, so a title never breaks around it. */}
                 <span className="block font-semibold">
                   {p.title}
-                  <span className="font-medium whitespace-nowrap text-white/60"> · day {p.day}</span>
+                  <span className="font-medium whitespace-nowrap text-white/60 xl:hidden"> · day {p.day}</span>
                 </span>
+                <span className="hidden text-small font-medium text-white/60 xl:block">Day {p.day}</span>
                 <span className="block text-small text-white/70">{p.note}</span>
               </span>
             </li>

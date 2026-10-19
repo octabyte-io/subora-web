@@ -331,7 +331,8 @@ export function AdminSubscriptionMock({ className, label }: { className?: string
             </span>
           </span>
         </div>
-        <div aria-hidden="true" className="h-14" />
+        {/* Room for the open menu, so the card holds all of it. */}
+        <div aria-hidden="true" className="h-24" />
       </div>
     </AdminFrame>
   );

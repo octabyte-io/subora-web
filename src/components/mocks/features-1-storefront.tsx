@@ -128,26 +128,25 @@ export function ThemeEditorMock({ className, label }: { className?: string; labe
 
 /** Ember Hill's range, one card per badge text, plus a sold-out bag that earns none. */
 const RANGE = [
-  { title: STORES.coffee.product.title, price: 18, accent: "#2A1F1A", badge: "Save 15%" },
-  { title: "Ridge Blend", price: 17, accent: "#5E6B4A", badge: "Save 15%" },
-  { title: "Decaf Night", price: 19, accent: "#3B4560", badge: "Free trial" },
-  { title: "Roaster’s Sampler", price: 24, accent: "#7A4B2E", badge: "Trial offer" },
-  { title: "Cold Brew Grind", price: 16, accent: "#4F5B66", badge: "Subscription available" },
-  { title: "Harvest Reserve", price: 26, accent: "#8C6342", badge: null },
+  { title: STORES.coffee.product.title, variant: STORES.coffee.product.variant, price: 18, accent: "#2A1F1A", badge: "Save 15%" },
+  { title: "Ridge Blend", variant: "340 g · Whole bean", price: 17, accent: "#5E6B4A", badge: "Save up to 15%" },
+  { title: "Decaf Night", variant: "340 g · Whole bean", price: 19, accent: "#3B4560", badge: "Free trial" },
+  { title: "Roaster’s Sampler", variant: "3 × 100 g", price: 24, accent: "#7A4B2E", badge: "Trial offer" },
+  { title: "Cold Brew Grind", variant: "340 g · Coarse ground", price: 16, accent: "#4F5B66", badge: "Subscription available" },
+  { title: "Harvest Reserve", variant: "250 g · Whole bean", price: 26, accent: "#8C6342", badge: null },
 ];
 
 export function BadgeGridMock({ className, label }: { className?: string; label?: string }) {
-  const { variant } = STORES.coffee.product;
   return (
     <StoreFrame store="coffee" className={className} label={label}>
       <div className="@container p-5">
         <p className="text-[1.0625rem] font-bold tracking-[-0.01em]">Coffee</p>
-        <div className="mt-4 grid grid-cols-2 gap-x-3 gap-y-5 @xl:grid-cols-3">
+        <div className="mt-4 grid grid-cols-2 gap-x-3 gap-y-5 @lg:grid-cols-3">
           {RANGE.map((p) => (
             <div key={p.title} className="min-w-0">
               <ProductArt store="coffee" accent={p.accent} />
               <p className="mt-2.5 truncate text-[0.875rem] font-semibold">{p.title}</p>
-              <p className="truncate text-[0.75rem] text-current/70">{variant}</p>
+              <p className="truncate text-[0.75rem] text-current/70">{p.variant}</p>
               <Money amount={p.price} className="mt-1 block text-[0.875rem] font-semibold" />
               {p.badge ? (
                 <span className="mt-1.5 inline-block rounded-full border border-current/20 px-2 py-0.5 text-[0.75rem]">
@@ -176,14 +175,16 @@ export function CartChooserMock({ className, label }: { className?: string; labe
         <div className="mt-3 divide-y divide-current/15">
           <div className="py-3.5">
             <div className="flex gap-3">
-              <ProductArt store="pet" className="w-14 shrink-0 rounded-lg" />
+              <ProductArt store="pet" className="w-14 shrink-0 self-start rounded-lg" />
               <div className="min-w-0 flex-1">
                 <p className="font-semibold">{title}</p>
                 <p className="text-[0.75rem] text-current/70">{variant}</p>
                 <p className="mt-2.5 font-bold">Subscribe &amp; save {pet.product.save}%</p>
                 <div className="mt-1.5 flex flex-wrap items-center gap-2">
                   <span className="flex h-8 items-center gap-3 rounded-md border border-current/25 px-2 text-[0.8125rem]">
-                    Every 4 weeks · <Money amount={petSub} />
+                    <span>
+                      Every 4 weeks · <Money amount={petSub} />
+                    </span>
                     <ChevronDown className="size-3.5 opacity-70" />
                   </span>
                   <span className="rounded-full border border-current/20 px-3.5 py-1 text-[0.8125rem]">Subscribe</span>
@@ -194,7 +195,7 @@ export function CartChooserMock({ className, label }: { className?: string; labe
           </div>
           <div className="py-3.5">
             <div className="flex gap-3">
-              <ProductArt store="pet" accent="#6B4E2E" className="w-14 shrink-0 rounded-lg" />
+              <ProductArt store="pet" accent="#6B4E2E" className="w-14 shrink-0 self-start rounded-lg" />
               <div className="min-w-0 flex-1">
                 <p className="font-semibold">Turkey &amp; Rice Senior Dry Food</p>
                 <p className="text-[0.75rem] text-current/70">3 kg bag</p>

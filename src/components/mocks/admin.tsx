@@ -57,7 +57,7 @@ export function AdminFrame({
         </div>
 
         {tabs ? (
-          <div className="mt-3 flex gap-1 overflow-hidden text-[0.75rem] whitespace-nowrap">
+          <div className="mt-3 flex flex-wrap gap-1 text-[0.75rem] whitespace-nowrap">
             {tabs.map((tab) => (
               <span
                 key={tab}
@@ -257,7 +257,8 @@ export function RetentionTableMock({ className, label }: { className?: string; l
         note="Renewals paid by saved subscribers, last 30 days"
         good
       />
-      <Card title="By reason" className="px-0 pb-1 sm:px-0">
+      <Card className="px-0 pb-1 sm:px-0">
+        <p className="mb-2.5 px-3.5 text-[0.8125rem] font-semibold sm:px-4">By reason</p>
         <table className="w-full text-left text-[0.8125rem] tnum">
           <thead className="text-[0.75rem] text-muted">
             <tr className="border-b border-line">

@@ -54,6 +54,9 @@ export function SiteHeader() {
     };
   }, [featuresOpen]);
 
+  // The mobile menu closes on Escape (focus goes back to its button) and
+  // when the viewport grows to the desktop nav. While it is open the page
+  // behind it does not scroll.
   useEffect(() => {
     if (!mobileOpen) return;
     const onKey = (event: KeyboardEvent) => {
@@ -61,8 +64,20 @@ export function SiteHeader() {
       setMobileOpen(false);
       mobileButton.current?.focus();
     };
+    const desktop = window.matchMedia("(min-width: 64rem)");
+    const onDesktop = () => {
+      if (desktop.matches) setMobileOpen(false);
+    };
+    const root = document.documentElement;
+    const previousOverflow = root.style.overflow;
+    root.style.overflow = "hidden";
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    desktop.addEventListener("change", onDesktop);
+    return () => {
+      root.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKey);
+      desktop.removeEventListener("change", onDesktop);
+    };
   }, [mobileOpen]);
 
   const inFeatures = pathname.startsWith("/features/");
@@ -93,27 +108,27 @@ export function SiteHeader() {
                 className={cn("size-4 transition-transform", featuresOpen && "rotate-180")}
               />
             </button>
-            {featuresOpen ? (
-              <div
-                id={panelId}
-                className="absolute top-[3.25rem] left-0 w-[40rem] rounded-[1.25rem] bg-paper p-2 ring-1 ring-line shadow-[0_28px_56px_-28px_rgb(28_32_38/0.45)]"
-              >
-                <ul className="grid grid-cols-2 gap-0.5">
-                  {featureNav.map((item) => (
-                    <li key={item.href}>
-                      <Link
-                        href={item.href}
-                        aria-current={pathname === item.href ? "page" : undefined}
-                        className="block h-full rounded-xl px-4 py-3 whitespace-normal hover:bg-frost aria-[current=page]:bg-frost"
-                      >
-                        <span className="block font-semibold">{item.label}</span>
-                        <span className="mt-0.5 block text-small text-muted">{item.blurb}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : null}
+            {/* Stays mounted while closed, so aria-controls always points at it. */}
+            <div
+              id={panelId}
+              hidden={!featuresOpen}
+              className="absolute top-[3.25rem] left-0 w-[40rem] rounded-[1.25rem] bg-paper p-2 ring-1 ring-line shadow-[0_28px_56px_-28px_rgb(28_32_38/0.45)]"
+            >
+              <ul className="grid grid-cols-2 gap-0.5">
+                {featureNav.map((item) => (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      aria-current={pathname === item.href ? "page" : undefined}
+                      className="block h-full rounded-xl px-4 py-3 whitespace-normal hover:bg-frost aria-[current=page]:bg-frost"
+                    >
+                      <span className="block font-semibold">{item.label}</span>
+                      <span className="mt-0.5 block text-small text-muted">{item.blurb}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
           {mainNav.map((item) => (
             <Link
@@ -151,53 +166,52 @@ export function SiteHeader() {
         </div>
       </div>
 
-      {mobileOpen ? (
-        <nav
-          id={mobileId}
-          aria-label="Mobile"
-          className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line bg-paper lg:hidden"
-        >
-          <div className="mx-auto max-w-[74rem] px-4 pt-4 pb-6 sm:px-6">
-            <h2 className="px-3 text-small font-semibold text-muted">Features</h2>
-            <ul className="mt-1">
-              {featureNav.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    aria-current={pathname === item.href ? "page" : undefined}
-                    className="block rounded-xl px-3 py-2.5 hover:bg-frost aria-[current=page]:bg-frost"
-                  >
-                    <span className="block text-[1.0625rem] font-semibold">{item.label}</span>
-                    <span className="block text-small text-muted">{item.blurb}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <ul className="mt-3 border-t border-line pt-3">
-              {mainNav.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    aria-current={pathname.startsWith(item.href) ? "page" : undefined}
-                    className="block rounded-xl px-3 py-2.5 text-[1.0625rem] font-semibold hover:bg-frost aria-[current=page]:bg-frost"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <a
-              href={siteConfig.installUrl}
-              className="mt-5 flex h-12 items-center justify-center gap-2.5 rounded-full bg-slate pr-6 pl-2 font-semibold text-paper"
-            >
-              <span className="grid size-8 place-items-center rounded-full bg-paper">
-                <Mark className="size-7" />
-              </span>
-              Install on Shopify
-            </a>
-          </div>
-        </nav>
-      ) : null}
+      <nav
+        id={mobileId}
+        aria-label="Mobile"
+        hidden={!mobileOpen}
+        className="max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-t border-line bg-paper lg:hidden"
+      >
+        <div className="mx-auto max-w-[74rem] px-4 pt-4 pb-6 sm:px-6">
+          <h2 className="px-3 text-small font-semibold text-muted">Features</h2>
+          <ul className="mt-1">
+            {featureNav.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  aria-current={pathname === item.href ? "page" : undefined}
+                  className="block rounded-xl px-3 py-2.5 hover:bg-frost aria-[current=page]:bg-frost"
+                >
+                  <span className="block text-[1.0625rem] font-semibold">{item.label}</span>
+                  <span className="block text-small text-muted">{item.blurb}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <ul className="mt-3 border-t border-line pt-3">
+            {mainNav.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  aria-current={pathname.startsWith(item.href) ? "page" : undefined}
+                  className="block rounded-xl px-3 py-2.5 text-[1.0625rem] font-semibold hover:bg-frost aria-[current=page]:bg-frost"
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <a
+            href={siteConfig.installUrl}
+            className="mt-5 flex h-12 items-center justify-center gap-2.5 rounded-full bg-slate pr-6 pl-2 font-semibold text-paper"
+          >
+            <span className="grid size-8 place-items-center rounded-full bg-paper">
+              <Mark className="size-7" />
+            </span>
+            Install on Shopify
+          </a>
+        </div>
+      </nav>
     </header>
   );
 }

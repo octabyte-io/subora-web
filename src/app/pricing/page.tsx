@@ -18,9 +18,9 @@ export const metadata = pageMetadata(pages.pricing);
 
 /** Where each plan is the cheapest, in monthly subscription revenue. */
 const CHEAPEST_WHEN = {
-  free: "Below about $3,270 a month",
-  growth: "From about $3,270 to $10,000 a month",
-  pro: "Above $10,000 a month",
+  free: "below about $3,270",
+  growth: "from about $3,270 to $10,000",
+  pro: "above $10,000",
 } as const;
 
 /** The average order the typical app's 19¢ per order is worked out on. */
@@ -200,19 +200,20 @@ export default function PricingPage() {
                 )}
               >
                 <h3 className="text-d3 font-semibold tracking-[-0.02em]">{plan.name}</h3>
-                <p className="mt-5 flex flex-wrap items-baseline gap-x-3">
+                <p className="mt-5 flex flex-wrap items-baseline gap-x-3 md:max-lg:flex-col md:max-lg:items-start">
                   <span className="text-d1 font-semibold tracking-[-0.04em] tnum">${plan.monthlyUsd}</span>
                   <span className="text-muted">every 30 days</span>
                 </p>
-                <p className="mt-1 flex flex-wrap items-baseline gap-x-3">
+                {/* Stacked from md, so one column wrapping never knocks the three out of line. */}
+                <p className="mt-1 flex flex-wrap items-baseline gap-x-3 md:flex-col md:items-start">
                   <span className="text-d2 font-semibold tracking-[-0.03em] tnum">+ {feeLabel(plan)}</span>
                   <span className="text-muted">of subscription sales</span>
                 </p>
                 <p className="mt-6 text-lead">{plan.pitch}</p>
                 <div className="mt-auto pt-8">
                   <p className="border-t border-line pt-4 text-small text-muted">
-                    Cheapest for you: <span className="font-semibold text-slate">{CHEAPEST_WHEN[plan.key]}</span>{" "}
-                    of subscription revenue.
+                    Cheapest when your subscription revenue is{" "}
+                    <span className="font-semibold text-slate">{CHEAPEST_WHEN[plan.key]}</span> a month.
                   </p>
                 </div>
               </li>
@@ -265,10 +266,58 @@ export default function PricingPage() {
           id="typical-title"
           title="Against a typical subscription app."
           continuation="Many charge $99 a month, 1% and 19¢ an order."
-          intro={`That is $99 a month, 1% of subscription sales and 19¢ on every order. To count orders, we assume an average order of $${AVERAGE_ORDER}. Subora has no per-order charge on any plan.`}
+          intro={`The 1% is on subscription sales and the 19¢ on every order. To count orders, we assume an average order of $${AVERAGE_ORDER}. Subora has no per-order charge on any plan.`}
         />
+        {/* Phones: one card per revenue, so "You keep" is never scrolled off to the side. */}
+        <ul className="mt-10 space-y-4 sm:hidden">
+          {COMPARE_AT.map((revenue) => {
+            const typical = typicalCost(revenue);
+            const plan = cheapestPlan(revenue);
+            const ours = planCost(plan, revenue);
+            return (
+              <li key={revenue} className="rounded-2xl bg-paper p-5 ring-1 ring-line">
+                <p>
+                  <span className="block text-d3 font-semibold tracking-[-0.02em] tnum">{usd(revenue)} a month</span>
+                  <span className="mt-1 block text-small text-muted tnum">
+                    {typical.orders} orders at ${AVERAGE_ORDER}
+                  </span>
+                </p>
+                <dl className="mt-4 divide-y divide-line border-t border-line text-small">
+                  <div className="flex items-baseline justify-between gap-4 py-3">
+                    <dt>
+                      <span className="font-semibold">Typical app</span>
+                      <span className="block text-muted tnum">
+                        $99 + {usd(typical.percent)} + {usd(typical.perOrder)}
+                      </span>
+                    </dt>
+                    <dd>
+                      <Money amount={typical.total} className="text-[1.125rem] font-semibold" />
+                    </dd>
+                  </div>
+                  <div className="flex items-baseline justify-between gap-4 py-3">
+                    <dt>
+                      <span className="font-semibold">Subora, cheapest plan</span>
+                      <span className="block text-muted tnum">
+                        {plan.name}, ${plan.monthlyUsd} + {feeLabel(plan)}
+                      </span>
+                    </dt>
+                    <dd>
+                      <Money amount={ours} className="text-[1.125rem] font-semibold" />
+                    </dd>
+                  </div>
+                  <div className="flex items-center justify-between gap-4 pt-3">
+                    <dt className="font-semibold">You keep, a month</dt>
+                    <dd className="rounded-md bg-amber px-2.5 py-1 text-[1.125rem] font-semibold text-slate">
+                      <Money amount={typical.total - ours} />
+                    </dd>
+                  </div>
+                </dl>
+              </li>
+            );
+          })}
+        </ul>
         <div
-          className="mt-12 relative overflow-x-auto"
+          className="mt-12 relative hidden overflow-x-auto sm:block"
           role="region"
           aria-labelledby="typical-title"
           tabIndex={0}
@@ -407,7 +456,7 @@ export default function PricingPage() {
           id="included-title"
           title="What’s included."
           continuation="On Free, Growth and Pro alike."
-          intro="Everything Subora does today. Each heading links to more detail."
+          intro="Everything Subora does today. Underlined headings link to more detail."
         />
         <div className="mt-14 grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
           {INCLUDED.map((group) => (

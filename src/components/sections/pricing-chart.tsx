@@ -185,15 +185,15 @@ export function PricingChart({ className }: { className?: string }) {
           <span className="hidden group-open:inline">Hide the table</span>
         </summary>
         <div className="mt-4 relative overflow-x-auto">
-          <table className="w-full min-w-[22rem] border-collapse text-left text-small tnum">
+          <table className="w-full min-w-[18rem] border-collapse text-left text-small tnum">
             <caption className="sr-only">Cost of each Subora plan for 30 days, by monthly subscription revenue</caption>
             <thead>
               <tr className="border-b-2 border-slate">
-                <th scope="col" className="py-2 pr-4 font-semibold">
+                <th scope="col" className="py-2 pr-3 font-semibold sm:pr-4">
                   Revenue a month
                 </th>
                 {PLANS.map((plan) => (
-                  <th key={plan.key} scope="col" className="py-2 pl-4 text-right font-semibold">
+                  <th key={plan.key} scope="col" className="py-2 pl-3 text-right font-semibold sm:pl-4">
                     {plan.name}
                   </th>
                 ))}
@@ -206,13 +206,13 @@ export function PricingChart({ className }: { className?: string }) {
                 const isLeast = (plan: (typeof PLANS)[number]) => planCost(plan, revenue) - least < 1e-9;
                 return (
                   <tr key={revenue} className="border-b border-line">
-                    <th scope="row" className="py-2 pr-4 font-medium">
+                    <th scope="row" className="py-2 pr-3 font-medium sm:pr-4">
                       {usd(revenue)}
                     </th>
                     {PLANS.map((plan) => (
                       <td
                         key={plan.key}
-                        className={cn("py-2 pl-4 text-right", isLeast(plan) ? "font-bold" : "text-muted")}
+                        className={cn("py-2 pl-3 text-right sm:pl-4", isLeast(plan) ? "font-bold" : "text-muted")}
                       >
                         {usd(planCost(plan, revenue))}
                         {isLeast(plan) ? <span className="sr-only"> (cheapest)</span> : null}

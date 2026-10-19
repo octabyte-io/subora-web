@@ -11,8 +11,8 @@ const LEGAL = [
 export function SiteFooter() {
   return (
     <footer className="on-slate mt-24 bg-slate-deep text-paper">
-      <Container className="grid grid-cols-1 gap-10 py-14 sm:grid-cols-3 md:grid-cols-[minmax(0,1.4fr)_repeat(3,minmax(0,1fr))]">
-        <div className="max-w-sm sm:col-span-3 md:col-span-1">
+      <Container className="grid grid-cols-2 gap-x-6 gap-y-10 py-14 sm:grid-cols-3 sm:gap-10 md:grid-cols-[minmax(0,1.4fr)_repeat(3,minmax(0,1fr))]">
+        <div className="col-span-2 max-w-sm sm:col-span-3 md:col-span-1">
           <Logo tone="white" />
           <p className="mt-4 text-white/75">
             Subscriptions for Shopify stores. Every feature and unlimited subscriptions on every plan. Made by{" "}

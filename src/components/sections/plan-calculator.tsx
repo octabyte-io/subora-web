@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState, type CSSProperties } from "react";
+import { useId, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { cn } from "@/lib/utils";
 import { PLANS, cheapestPlan, feeLabel, planCost } from "@/content/plans";
 
@@ -22,6 +22,20 @@ function stepFor(revenue: number) {
   return Math.round(STEPS * Math.cbrt(revenue / MAX));
 }
 
+/**
+ * The next step, in a direction, whose revenue differs from this one. Rounding
+ * leaves many neighboring steps on the same dollar amount (most of them near
+ * $0), so a plain arrow key would often appear to do nothing.
+ */
+function nextDistinctStep(step: number, direction: 1 | -1) {
+  const revenue = revenueAt(step);
+  let next = step + direction;
+  while (next > 0 && next < STEPS && revenueAt(next) === revenue) next += direction;
+  return Math.min(STEPS, Math.max(0, next));
+}
+
+const ARROWS: Record<string, 1 | -1> = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1 };
+
 const usd = (n: number, cents = false) =>
   n.toLocaleString("en-US", {
     style: "currency",
@@ -36,13 +50,21 @@ export function PlanCalculator({ initialRevenue = 5_000, className }: { initialR
   const revenue = revenueAt(step);
   const best = cheapestPlan(revenue);
 
+  function onKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+    const direction = ARROWS[e.key];
+    if (!direction) return;
+    e.preventDefault();
+    setStep((s) => nextDistinctStep(s, direction));
+  }
+
   return (
     <div className={cn("rounded-[1.5rem] bg-paper p-5 ring-1 ring-line sm:p-8", className)}>
       <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
         <label htmlFor={id} className="font-semibold">
           Your monthly subscription revenue
         </label>
-        <output htmlFor={id} className="text-d2 font-semibold tracking-[-0.03em] tnum" aria-live="polite">
+        {/* The slider's own value text is announced; a live output would say it twice. */}
+        <output htmlFor={id} className="text-d2 font-semibold tracking-[-0.03em] tnum" aria-live="off">
           {usd(revenue)}
         </output>
       </div>
@@ -53,7 +75,8 @@ export function PlanCalculator({ initialRevenue = 5_000, className }: { initialR
         max={STEPS}
         value={step}
         onChange={(e) => setStep(Number(e.target.value))}
-        aria-valuetext={`${usd(revenue)} a month`}
+        onKeyDown={onKeyDown}
+        aria-valuetext={`${usd(revenue)} a month. Cheapest: ${best.name}, ${usd(planCost(best, revenue), planCost(best, revenue) % 1 !== 0)}`}
         className="range mt-5 w-full"
         style={{ "--fill": `${(step / STEPS) * 100}%` } as CSSProperties}
       />
@@ -62,7 +85,7 @@ export function PlanCalculator({ initialRevenue = 5_000, className }: { initialR
         <span>$100,000</span>
       </div>
 
-      <ul className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <ul className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-3">
         {PLANS.map((plan) => {
           const cheapest = plan.key === best.key;
           const cost = planCost(plan, revenue);
@@ -74,14 +97,13 @@ export function PlanCalculator({ initialRevenue = 5_000, className }: { initialR
                 cheapest ? "bg-amber-tint ring-2 ring-amber" : "ring-line",
               )}
             >
-              <p className="flex items-center justify-between gap-3">
-                <span className="font-semibold">{plan.name}</span>
-                {cheapest ? (
-                  <span className="rounded-full bg-amber px-2.5 py-0.5 text-small font-semibold text-slate">
-                    Cheapest
-                  </span>
-                ) : null}
-              </p>
+              {/* The badge sits on the card's edge, so moving it between cards never reflows them. */}
+              <p className="font-semibold">{plan.name}</p>
+              {cheapest ? (
+                <span className="absolute -top-3 right-4 rounded-full bg-amber px-2.5 py-0.5 text-small font-semibold text-slate">
+                  Cheapest
+                </span>
+              ) : null}
               <p className="mt-2 text-d3 font-semibold tracking-[-0.02em] tnum">
                 {usd(cost, cost % 1 !== 0)}
                 <span className="text-small font-medium text-muted"> a month</span>

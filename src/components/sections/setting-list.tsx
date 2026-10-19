@@ -16,11 +16,11 @@ export type Setting = {
  */
 export function SettingList({ settings, className }: { settings: Setting[]; className?: string }) {
   return (
-    <dl className={cn("divide-y divide-line border-y border-line in-[.on-slate]:divide-white/15 in-[.on-slate]:border-white/15", className)}>
+    <dl className={cn("@container divide-y divide-line border-y border-line in-[.on-slate]:divide-white/15 in-[.on-slate]:border-white/15", className)}>
       {settings.map((setting) => (
         <div
           key={setting.name}
-          className="grid grid-cols-1 gap-x-8 gap-y-1.5 py-5 sm:grid-cols-[minmax(0,15rem)_minmax(0,1fr)]"
+          className="grid grid-cols-1 gap-x-8 gap-y-1.5 py-5 @[36rem]:grid-cols-[minmax(0,15rem)_minmax(0,1fr)]"
         >
           <dt className="font-semibold">{setting.name}</dt>
           <dd className="text-muted in-[.on-slate]:text-white/75">

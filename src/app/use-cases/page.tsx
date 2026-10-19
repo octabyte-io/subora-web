@@ -57,7 +57,7 @@ export default function UseCasesPage() {
                         <span className="block text-[1.3125rem] leading-snug font-semibold tracking-[-0.015em] group-hover:underline group-hover:decoration-amber group-hover:decoration-2 group-hover:underline-offset-4">
                           {post.title}
                         </span>
-                        <span className="mt-2 block text-muted">{post.summary}</span>
+                        <span className="mt-2 block max-w-[62ch] text-muted">{post.summary}</span>
                       </span>
                       <SceneThumb scene={post.cover} zoom={0.3} className="hidden sm:block" />
                     </Link>

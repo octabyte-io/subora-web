@@ -158,7 +158,7 @@ export default function StorefrontPage() {
         continuation="on the product page you already have."
         intro="Subora’s Picker sits next to your Add to cart button in your theme’s own fonts and colors. Collection badges point out subscriptions on product cards, and on Dawn and Horizon themes the Cart offer turns a one-time item into a subscription. All three are set up in Shopify’s theme editor, with no code."
         aside={
-          <ProductPickerMock label="Fernlee’s product page with Subora’s Picker: one time for $54, or every 4 weeks for $48.60, save 10%, with a line saying the charge recurs and a link to the subscription policy." />
+          <ProductPickerMock label="Fernlee’s product page with Subora’s Picker: one time for $54, or every 4, 6 or 8 weeks for $48.60, save 10%, with every 4 weeks chosen, and a line saying the charge recurs and a link to the subscription policy." />
         }
       >
         <InstallLink />
@@ -187,7 +187,7 @@ export default function StorefrontPage() {
           <SettingList settings={PICKER_SETTINGS} />
         </div>
 
-        <div className="mt-20 grid grid-cols-1 items-start gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] lg:gap-16">
+        <div className="mt-20 grid grid-cols-1 items-start gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-16">
           <div>
             <h3 className="text-d3 font-semibold tracking-[-0.02em]">What it does without being asked.</h3>
             <ul className="mt-6 space-y-3 border-l-2 border-line pl-5">

@@ -30,14 +30,23 @@ function RevenueLine() {
   const y = (v: number) => H - (v / max) * H;
   const d = DAILY.map((v, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(" ");
   return (
-    <div>
+    <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-2">
+      {/* The scale, so the line reads as dollars a day: $800 at the top, $400 halfway. */}
+      <div className="relative h-24 w-7 text-right text-[0.625rem] leading-none text-muted tnum">
+        <span className="absolute top-0 right-0 -translate-y-1/2">$800</span>
+        <span className="absolute top-1/2 right-0 -translate-y-1/2">$400</span>
+        <span className="absolute bottom-0 right-0 translate-y-1/2">$0</span>
+      </div>
       <div className="relative h-24">
         <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="absolute inset-0 size-full">
+          {[0, H / 2].map((gy) => (
+            <line key={gy} x1="0" x2={W} y1={gy} y2={gy} stroke="rgb(43 48 56 / 0.1)" vectorEffect="non-scaling-stroke" />
+          ))}
           <line x1="0" x2={W} y1={H} y2={H} stroke="rgb(43 48 56 / 0.25)" vectorEffect="non-scaling-stroke" />
           <path d={d} fill="none" stroke="#2B3038" strokeWidth="2" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
         </svg>
       </div>
-      <div className="mt-1.5 flex justify-between text-[0.625rem] text-muted">
+      <div className="col-start-2 mt-1.5 flex justify-between text-[0.625rem] text-muted">
         <span>Sep 20</span>
         <span>Oct 4</span>
         <span>Oct 19</span>
@@ -134,7 +143,7 @@ const ROWS: Row[] = [
 export function SubscriptionListMock({ className, label }: { className?: string; label?: string }) {
   return (
     <AdminFrame title="Subscriptions" action="Export" store={mira.name} className={className} label={label}>
-      <div className="flex gap-1 overflow-hidden text-[0.75rem] whitespace-nowrap">
+      <div className="flex flex-wrap gap-1 text-[0.75rem] whitespace-nowrap">
         {["All", "Active", "Paused", "Canceled"].map((v, i) => (
           <span key={v} className={cn("rounded-lg px-2.5 py-1.5", i === 0 ? "bg-[#E3E3E3] font-semibold" : "text-muted")}>
             {v}

@@ -50,8 +50,8 @@ const NO_GATES = [
     body: "No cap on subscribers or on revenue, on any plan. Growing never forces you onto a different plan.",
   },
   {
-    title: "A plan with no fee at all.",
-    body: `Pro is $99 a month and 0%, with no cents per order. Typical subscription apps charge ${TYPICAL_APP.label}.`,
+    title: "A plan with no transaction fee.",
+    body: `Pro is $99 a month with a 0% fee and no cents per order. Typical subscription apps charge ${TYPICAL_APP.label}.`,
   },
 ];
 
@@ -140,6 +140,7 @@ export default function HomePage() {
                   </div>
                 ))}
               </dl>
+              <p className="mt-3 text-small text-muted">Monthly price + transaction fee on subscription sales.</p>
             </div>
 
             {/* The customer's side: the store's own product page. */}
@@ -151,7 +152,8 @@ export default function HomePage() {
 
             {/* The merchant's side: what that page leads to, in Subora's Activity. */}
             <div
-              aria-hidden="true"
+              role="img"
+              aria-label="Subora’s Activity this morning: a renewal charged, a delivery skipped, a failed payment recovered after one retry, and a retention offer accepted."
               className="max-w-[34rem] rounded-2xl bg-slate p-4 text-paper shadow-[0_24px_48px_-24px_rgb(28_32_38/0.6)] sm:p-5"
             >
               <p className="flex items-center gap-2 text-small font-semibold text-white/70">

@@ -360,7 +360,7 @@ export function RecoveryNumbersMock({ className, label }: { className?: string; 
         <Stat name="Failed payments" value="42" />
         <Stat name="Retries" value="71" />
         <Stat name="Recovered" value="29" />
-        <Stat name="Recovery rate" value="69%" note="29 of 42 finished" />
+        <Stat name="Recovery rate" value="69%" note="29 recovered of 42 finished" />
         <Stat name="Recovered revenue" value={<Money amount={PET_PRICE * 29} />} good />
         <Stat name="Unrecoverable revenue" value={<Money amount={PET_PRICE * 13} />} />
       </div>

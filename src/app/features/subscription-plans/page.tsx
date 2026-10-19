@@ -169,7 +169,7 @@ const SETTINGS: Setting[] = [
 ];
 
 const STORE_PAGE: Record<StoreKey, string> = {
-  coffee: `${STORES.coffee.name}’s product page`,
+  coffee: `${STORES.coffee.name}’ product page`,
   pet: `${STORES.pet.name}’s product page`,
   skincare: `${STORES.skincare.name}’s product page`,
 };
