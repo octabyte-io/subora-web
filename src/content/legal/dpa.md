@@ -10,7 +10,7 @@ This agreement is between {{OCTABYTE_LEGAL_NAME}} ([octabyte.io](https://octabyt
 
 ### 1.2 How it is agreed
 
-Installing Subora on a Shopify store accepts the {{TERMS_OF_SERVICE}}, and
+Installing Subora on a Shopify store accepts the Subora terms of service, and
 those terms incorporate this agreement in full. No separate signature is
 required and none is offered: Shopify's installation flow has no step at which
 an app can present one.
@@ -113,9 +113,9 @@ The Merchant gives general authorisation for the sub-processors below.
 | Sub-processor | Purpose | Location |
 | --- | --- | --- |
 | Shopify Inc. | Platform, subscription contracts, charges, and source of customer and order data | Canada / global |
-| Hetzner Online GmbH | Application, database and queue hosting | {{HOSTING_LOCATION}} |
+| Hetzner Online GmbH | Application, database and queue hosting | Germany (`nbg1`) |
 | Plus Five Five, Inc. (Resend) | Email delivery. Keeps each email, including its content and any attachment, for 30 days, plus up to 7 days in backups | United States |
-| Functional Software, Inc. d/b/a Sentry | Application error reporting | {{SENTRY_LOCATION}} |
+| Functional Software, Inc. d/b/a Sentry | Application error reporting | United States (Iowa) |
 
 OctaByte will give the Merchant **30 days' notice** before adding or replacing
 a sub-processor. A Merchant who objects on reasonable data protection grounds
@@ -198,10 +198,12 @@ timing and cost in advance, and the auditor must be bound by confidentiality.
 
 ## 12. International transfers
 
-The application and database are in {{HOSTING_LOCATION}}. Email delivery is
-in the United States, so a customer's email address and the content of each
+The application and database are in **Germany**. Email delivery is in the
+**United States**, so a customer's email address and the content of each
 email are transferred there when an email is sent, and kept there for the
-period in section 6.
+period in section 6. Error reports are also processed in the United States;
+as section 5 sets out, they carry no request contents, cookies or user
+details.
 
 Where a transfer requires a safeguard, the parties rely on the European
 Commission's Standard Contractual Clauses (Module 2, controller to processor),
@@ -213,7 +215,7 @@ apply too.
 ## 13. Breach notification
 
 OctaByte notifies the Merchant of a personal data breach affecting the
-Merchant's data **without undue delay and within {{BREACH_NOTICE}}** of
+Merchant's data **without undue delay and within 48 hours** of
 becoming aware of it, so that the Merchant can meet a 72-hour regulatory
 deadline. The notification describes what is known: the nature of the breach,
 the categories and approximate number of data subjects and records, the likely

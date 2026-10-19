@@ -9,16 +9,13 @@ import { siteConfig } from "@/config/site";
  * A deliberately small Markdown renderer for the two legal documents in
  * `src/content/legal`. It runs at build time and handles only what those files
  * use: `##`/`###` headings, paragraphs, `-` and `1.` lists, pipe tables,
- * **bold**, _italic_, `code`, [links](url) and {{PLACEHOLDER}} tokens.
+ * **bold**, _italic_, `code`, [links](url), bare email addresses (linked as
+ * mailto) and {{PLACEHOLDER}} tokens.
  */
 
 const PLACEHOLDERS: Record<string, { value: string | null; label: string }> = {
   OCTABYTE_LEGAL_NAME: { value: siteConfig.legal.legalName, label: "OctaByte legal name" },
   LAST_UPDATED: { value: siteConfig.legal.lastUpdated, label: "Date set on publication" },
-  HOSTING_LOCATION: { value: siteConfig.legal.hostingLocation, label: "Hetzner data-centre location" },
-  SENTRY_LOCATION: { value: siteConfig.legal.sentryLocation, label: "Sentry data region" },
-  BREACH_NOTICE: { value: siteConfig.legal.breachNotice, label: "Breach notice window, e.g. 48 hours" },
-  TERMS_OF_SERVICE: { value: siteConfig.legal.termsOfService, label: "Subora terms of service, not yet written" },
 };
 
 export const hasOpenPlaceholders = Object.values(PLACEHOLDERS).some((p) => !p.value);
@@ -31,8 +28,11 @@ const slug = (text: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 
+const EMAIL = /^[\w.+-]+@[\w-]+(?:\.[\w-]+)*\.[a-z]{2,}$/i;
+
 function inline(text: string, keyPrefix = ""): ReactNode[] {
-  const pattern = /(\*\*[^*]+\*\*|_[^_]+_|`[^`]+`|\[[^\]]+\]\([^)]+\)|\{\{[A-Z_]+\}\})/g;
+  const pattern =
+    /(\*\*[^*]+\*\*|_[^_]+_|`[^`]+`|\[[^\]]+\]\([^)]+\)|\{\{[A-Z_]+\}\}|[\w.+-]+@[\w-]+(?:\.[\w-]+)*\.[a-z]{2,})/gi;
   const parts = text.split(pattern).filter((part) => part !== "");
   return parts.map((part, i) => {
     const key = `${keyPrefix}${i}`;
@@ -49,6 +49,12 @@ function inline(text: string, keyPrefix = ""): ReactNode[] {
       const token = PLACEHOLDERS[part.slice(2, -2)];
       return token ? <Placeholder key={key} value={token.value} label={token.label} /> : part;
     }
+    if (EMAIL.test(part))
+      return (
+        <a key={key} href={`mailto:${part}`} className="link">
+          {part}
+        </a>
+      );
     const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
     if (link) {
       const [, label, href] = link;
@@ -67,6 +73,9 @@ function inline(text: string, keyPrefix = ""): ReactNode[] {
   });
 }
 
+/** A pipe table's divider row, `| --- | :---: |`. It needs dashes: an empty row such as `| | |` is a (blank) header. */
+const DIVIDER = /^\|(\s*:?-+:?\s*\|)+$/;
+
 const cells = (row: string) =>
   row
     .trim()
@@ -81,6 +90,8 @@ export function renderLegal(file: "privacy" | "dpa"): { body: ReactNode; heading
   const out: ReactNode[] = [];
   const headings: LegalHeading[] = [];
   let i = 0;
+  /** The section a table sits in, to name it for screen readers and keyboard scrolling. */
+  let section = "";
 
   const isBlockStart = (line: string) =>
     line.startsWith("#") || line.startsWith("|") || /^- /.test(line) || /^\d+\. /.test(line);
@@ -96,6 +107,7 @@ export function renderLegal(file: "privacy" | "dpa"): { body: ReactNode; heading
     if (heading) {
       const text = heading[2];
       const id = slug(text);
+      section = text;
       if (heading[1] === "##") {
         headings.push({ id, text });
         out.push(
@@ -117,13 +129,37 @@ export function renderLegal(file: "privacy" | "dpa"): { body: ReactNode; heading
     if (line.startsWith("|")) {
       const rows: string[][] = [];
       while (i < lines.length && lines[i].startsWith("|")) {
-        if (!/^\|[\s|:-]+\|$/.test(lines[i].trim())) rows.push(cells(lines[i]));
+        if (!DIVIDER.test(lines[i].trim())) rows.push(cells(lines[i]));
         i++;
       }
       const [head, ...body] = rows;
       const headless = head.every((cell) => cell === "");
+
+      // A table with no header is a list of terms and what they mean. Set as a
+      // definition list it stacks on a phone instead of scrolling sideways.
+      if (headless && body.every((row) => row.length === 2)) {
+        out.push(
+          <dl key={`t${i}`} className="mt-6 border-t-2 border-slate text-[0.9375rem]">
+            {body.map(([term, value], r) => (
+              <div key={r} className="grid grid-cols-1 gap-x-6 gap-y-1 border-b border-line py-3 sm:grid-cols-[11rem_minmax(0,1fr)]">
+                <dt className="font-semibold">{inline(term.replace(/^\*\*(.*)\*\*$/, "$1"))}</dt>
+                <dd>{inline(value)}</dd>
+              </div>
+            ))}
+          </dl>,
+        );
+        continue;
+      }
+
       out.push(
-        <div key={`t${i}`} className="mt-6 relative overflow-x-auto">
+        // Wide tables scroll inside themselves on phones; the region lets keyboard users scroll them too.
+        <div
+          key={`t${i}`}
+          role="region"
+          aria-label={section ? `Table: ${section.replace(/^[\d.]+\s*/, "")}` : "Table"}
+          tabIndex={0}
+          className="relative mt-6 overflow-x-auto rounded-sm"
+        >
           <table className="w-full min-w-[32rem] text-left text-[0.9375rem]">
             {headless ? null : (
               <thead className="text-muted">
@@ -139,11 +175,17 @@ export function renderLegal(file: "privacy" | "dpa"): { body: ReactNode; heading
             <tbody>
               {body.map((row, r) => (
                 <tr key={r} className="border-b border-line align-top">
-                  {row.map((cell, c) => (
-                    <td key={c} className="py-3 pr-4">
-                      {inline(cell)}
-                    </td>
-                  ))}
+                  {row.map((cell, c) =>
+                    c === 0 ? (
+                      <th key={c} scope="row" className="py-3 pr-4 font-normal">
+                        {inline(cell)}
+                      </th>
+                    ) : (
+                      <td key={c} className="py-3 pr-4">
+                        {inline(cell)}
+                      </td>
+                    ),
+                  )}
                 </tr>
               ))}
             </tbody>

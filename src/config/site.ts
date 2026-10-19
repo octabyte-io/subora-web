@@ -16,15 +16,7 @@ export const siteConfig = {
     "Subora lets Shopify stores sell subscriptions, lets customers manage their own, retries failed payments and shows what keeps subscribers. Every feature and unlimited subscriptions on every plan.",
   legal: {
     legalName: "OctaByte" as string | null,
-    lastUpdated: null as string | null,
-    /** Where the production server runs, e.g. "Germany (Nuremberg)". Not stated in the Subora repo. */
-    hostingLocation: null as string | null,
-    /** Sentry's data region for the octabyte-io org, e.g. "United States". */
-    sentryLocation: null as string | null,
-    /** The breach notice the team commits to, e.g. "48 hours". No incident policy exists yet. */
-    breachNotice: null as string | null,
-    /** The name of the terms the DPA hangs from, e.g. "Subora terms of service", once they exist. */
-    termsOfService: null as string | null,
+    lastUpdated: "20 October 2026" as string | null,
   },
 } as const;
 

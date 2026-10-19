@@ -168,9 +168,9 @@ We use four sub-processors:
 | Sub-processor | What it does | Where |
 | --- | --- | --- |
 | Shopify Inc. | The store platform: holds the subscriptions, customers, orders and saved payment methods, and runs the charges | Canada / global |
-| Hetzner Online GmbH | Hosts the application server, its database and its job queue | {{HOSTING_LOCATION}} |
+| Hetzner Online GmbH | Hosts the application server, its database and its job queue | Germany (`nbg1`) |
 | Resend (Plus Five Five, Inc.) | Delivers the emails to customers and merchants | United States |
-| Functional Software, Inc. d/b/a Sentry | Receives a report when something in the app fails, so we can fix it | {{SENTRY_LOCATION}} |
+| Functional Software, Inc. d/b/a Sentry | Receives a report when something in the app fails, so we can fix it | United States (Iowa) |
 
 **Resend keeps a copy of each email it delivers**, including the address,
 subject and text, and any attachment, for **30 days**, and for up to 7 more
@@ -199,10 +199,10 @@ customer name or email address**.
 
 ## 7. Where it is processed
 
-The application and its database run in {{HOSTING_LOCATION}}. Emails are
+The application and its database run in **Germany**. Emails are
 delivered through a provider in the **United States**, so a customer's email
 address and the content of the email reach the United States when an email
-is sent. Error reports are processed in {{SENTRY_LOCATION}}.
+is sent. Error reports are processed in the **United States**.
 
 Where a transfer needs a legal basis, it rests on the European Commission's
 Standard Contractual Clauses, which are part of our agreements with the
@@ -278,7 +278,7 @@ changes it in Shopify.
   subscriptions.
 
 If a breach affects personal data we process for a merchant, we notify that
-merchant without undue delay and no later than {{BREACH_NOTICE}} after we
+merchant without undue delay and no later than **48 hours** after we
 become aware of it.
 
 ## 11. Your rights

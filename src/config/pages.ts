@@ -103,11 +103,13 @@ export const pages = {
     title: "Privacy policy",
     description:
       "What data Subora collects, why, where it is processed, how long it is kept and how to have it removed.",
+    lastModified: "2026-10-20",
   },
   dpa: {
     path: "/dpa/",
     title: "Data protection agreement",
     description: "The data protection agreement between OctaByte and merchants who install Subora.",
+    lastModified: "2026-10-20",
   },
 } satisfies Record<string, PageEntry>;
 
