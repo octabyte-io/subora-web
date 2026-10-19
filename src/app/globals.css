@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-manrope);
+
+  /*
+   * Subora brand. Slate is the ink. Amber has one job: money moving in the
+   * merchant's favour, and the one action that installs Subora. Amber fails
+   * contrast on light grounds (2.1:1), so on frost or white it is only ever a
+   * fill behind slate text or a decoration; amber-ink is the text colour.
+   */
+  --color-slate: var(--slate);
+  --color-slate-deep: var(--slate-deep);
+  --color-muted: var(--muted);
+  --color-frost: var(--frost);
+  --color-paper: var(--paper);
+  --color-amber: var(--amber);
+  --color-amber-ink: var(--amber-ink);
+  --color-amber-tint: var(--amber-tint);
+  --color-line: var(--line);
+
+  /* Type scale, ratio 1.25 from a 17px body. */
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.65;
+  --text-small: 0.9375rem;
+  --text-small--line-height: 1.55;
+  --text-lead: 1.25rem;
+  --text-lead--line-height: 1.55;
+  --text-d3: 1.5rem;
+  --text-d3--line-height: 1.25;
+  --text-d2: clamp(1.875rem, 1.4rem + 2vw, 2.75rem);
+  --text-d2--line-height: 1.1;
+  --text-d1: clamp(2.375rem, 1.5rem + 3.9vw, 4.25rem);
+  --text-d1--line-height: 1.03;
+}
+
+:root {
+  --slate: #2b3038;
+  --slate-deep: #1c2026;
+  --muted: #5b6270;
+  --frost: #f2f3f5;
+  --paper: #ffffff;
+  --amber: #e8a33d;
+  --amber-ink: #8f5a10;
+  --amber-tint: #f6e7cc;
+  /* Translucent, so rules read on frost and on paper alike. */
+  --line: rgb(43 48 56 / 0.13);
+}
+
+@layer base {
+  html {
+    @apply bg-frost font-sans text-slate;
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+  body {
+    @apply text-body;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p,
+  li {
+    text-wrap: pretty;
+  }
+  :focus-visible {
+    outline: 2px solid var(--slate);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  .on-slate :focus-visible {
+    outline-color: var(--amber);
+  }
+  ::selection {
+    background: var(--amber-tint);
+    color: var(--slate);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(43 48 56 / 0.28) transparent;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Comfortable reading width for running text. */
+@utility measure {
+  max-width: 68ch;
+}
+
+/* Body links: slate text, amber underline that darkens to slate on hover. */
+@utility link {
+  font-weight: 600;
+  text-decoration-line: underline;
+  text-decoration-color: var(--amber);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  &:hover {
+    text-decoration-color: currentColor;
+  }
+}
