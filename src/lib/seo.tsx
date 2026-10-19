@@ -1,10 +1,19 @@
 import type { Metadata } from "next";
 import type { PageEntry } from "@/config/pages";
 import { siteConfig } from "@/config/site";
+import { ogImageName, ogSize } from "@/lib/og-image";
 
 const absolute = (path: string) => new URL(path, siteConfig.url).toString();
 
-/** Title, description, canonical and Open Graph for one page. */
+/** A page's share card, rendered by `app/og/[image]/route.tsx`. */
+const ogCard = (page: PageEntry) => ({
+  url: `/og/${ogImageName(page)}`,
+  width: ogSize.width,
+  height: ogSize.height,
+  alt: page.headline ?? page.title,
+});
+
+/** Title, description, canonical, Open Graph and share card for one page. */
 export function pageMetadata(page: PageEntry): Metadata {
   const isHome = page.path === "/";
   return {
@@ -17,8 +26,9 @@ export function pageMetadata(page: PageEntry): Metadata {
       siteName: siteConfig.name,
       locale: "en_US",
       url: page.path,
-      images: [{ url: "/brand/subora-app-icon-1200.png", width: 1200, height: 1200, alt: siteConfig.name }],
+      images: [ogCard(page)],
     },
+    twitter: { card: "summary_large_image", images: [ogCard(page)] },
   };
 }
 

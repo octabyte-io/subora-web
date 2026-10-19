@@ -148,7 +148,7 @@ On a customer erasure request, OctaByte, in one operation:
 
 - removes the customer's name and email address from every subscription they
   hold with the Merchant;
-- deletes the words they typed when cancelling;
+- deletes the words they typed when canceling;
 - deletes OctaByte's copy of the prices promised to them at checkout;
 - deletes the record that they reported an email as spam.
 

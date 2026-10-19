@@ -146,7 +146,7 @@ settings the merchant chose:
 - **A failed charge is retried.** By default we retry 3 times, on days 1, 4
   and 9 after the failure. The merchant may change this. When a customer adds
   a new card, we retry at once.
-- **When retries run out**, the subscription is paused, cancelled or skipped,
+- **When retries run out**, the subscription is paused, canceled or skipped,
   or waits for a new card, as the merchant has chosen. The unpaid order is
   never charged later.
 - **A pause the customer chose for 30 or 60 days ends** on its date, and the
@@ -155,7 +155,7 @@ settings the merchant chose:
   orders, for example when a trial price ends.
 - **A subscription with a fixed number of orders ends** when the last one is
   paid.
-- **Cancelling may be blocked until a minimum number of orders** if the
+- **Canceling may be blocked until a minimum number of orders** if the
   merchant's plan requires it. The customer is told this before they buy.
 
 A customer who disagrees with any of these can contact the store, which can
@@ -218,7 +218,7 @@ ways.
 
 - remove their name and email address from every subscription they hold in
   that store;
-- delete the words they typed when cancelling;
+- delete the words they typed when canceling;
 - delete our copy of the prices promised to them;
 - delete the record that they reported an email as spam.
 
